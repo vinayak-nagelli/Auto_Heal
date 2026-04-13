@@ -33,8 +33,9 @@ class ATMUser:
         if amount > self.balance:
             return "Insufficient Funds"
         
-        self.balance = self.balance - amount
-        return self.balance
+        new_balance = self.balance - amount
+        self.balance = new_balance
+        return new_balance
 
     def logout(self):
         self.is_authenticated = False
