@@ -1,6 +1,6 @@
 # test_atm_system.py
 import pytest
-from atm_system import ATMUser
+from src.atm_system import ATMUser
 
 @pytest.fixture
 def active_user():
