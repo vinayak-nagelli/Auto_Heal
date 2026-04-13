@@ -33,7 +33,7 @@ class ATMUser:
         if amount > self.balance:
             return "Insufficient Funds"
         
-        self.balance = self.balance - amount
+        self.balance -= amount  # corrected the formula
         return self.balance
 
     def logout(self):
