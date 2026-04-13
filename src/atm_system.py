@@ -1,5 +1,3 @@
-# atm_system.py
-
 class ATMUser:
     def __init__(self, name, pin, balance=0.0):
         self.name = name
@@ -24,7 +22,7 @@ class ATMUser:
         if amount <= 0:
             return "Invalid Amount"
         
-        self.balance *= amount
+        self.balance += amount
         return self.balance
 
     def withdraw(self, amount):
@@ -32,7 +30,7 @@ class ATMUser:
             return "Authentication Required"
         if amount <= 0:
             return "Invalid Amount"
-        if amount < self.balance:
+        if amount > self.balance:
             return "Insufficient Funds"
         
         self.balance -= amount
