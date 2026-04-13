@@ -1,0 +1,80 @@
+name: CI & Self-Healing
+
+on: [push, pull_request]
+
+jobs:
+  test-and-heal:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      run: |
+        pip install pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+   # 1️⃣ RUN TESTS AND CAPTURE LOGS
+    - name: Run Tests & Capture Output
+      id: run_tests
+      run: |
+        # Run pytest on the 'tests/' folder
+        pytest tests/ > test_logs.txt 2>&1 || true
+        
+        cat test_logs.txt
+        
+        # 🔍 UPDATED CHECK: Look for "FAILED" OR "ERROR" (case insensitive)
+        if grep -iE "failed|error" test_logs.txt; then
+          echo "❌ Tests failed or errored! Triggering self-healing..."
+          echo "status=failure" >> $GITHUB_OUTPUT
+        else
+          echo "✅ Tests passed!"
+          echo "status=success" >> $GITHUB_OUTPUT
+        fi
+    # 2️⃣ TRIGGER KESTRA (SAFER VERSION USING JQ)
+    - name: 🚨 Trigger AI Self-Healing
+      if: steps.run_tests.outputs.status == 'failure'
+      run: |
+        # 1. Read logs into a variable (limit to 5000 chars to respect payload limits)
+        LOGS=$(cat test_logs.txt | head -c 5000)
+        
+        # 2. Use jq to create valid JSON safely
+        # This handles all escaping of quotes/newlines automatically to prevent 204 errors
+        JSON_PAYLOAD=$(jq -n \
+          --arg repo "${{ github.repository }}" \
+          --arg branch "${{ github.ref_name }}" \
+          --arg job "${{ github.job }}" \
+          --arg msg "CI Pipeline Failed on GitHub Actions" \
+          --arg logs "$LOGS" \
+          --arg commit "${{ github.sha }}" \
+          --arg token "${{ secrets.SELF_HEALING_GITHUB_TOKEN }}" \
+          --arg key "${{ secrets.GEMINI_API_KEY }}" \
+          '{
+            repository: $repo,
+            branch: $branch,
+            job_name: $job,
+            error_message: $msg,
+            error_logs: $logs,
+            commit_sha: $commit,
+            github_token: $token,
+            gemini_api_key: $key
+          }')
+
+        echo "🔥 Triggering Kestra via Ngrok..."
+        
+        # 3. Send the Clean JSON
+        curl -X POST "${{ secrets.KESTRA_WEBHOOK_URL }}" \
+          -H "Content-Type: application/json" \
+          -d "$JSON_PAYLOAD"
+          
+        # Force the job to fail so the red 'X' appears in GitHub
+        exit 1

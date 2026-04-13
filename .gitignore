@@ -1,0 +1,32 @@
+# 🐍 Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 🧪 Testing & Logs
+.pytest_cache/
+.coverage
+htmlcov/
+test_logs.txt     # <--- Important: Ignores the log file your CI script creates
+
+# 🔐 Secrets (CRITICAL)
+.env
+.env.local
+kestra/flows/.env
+
+# 🍏 Mac
+.DS_Store
+
+# 💻 VS Code
+.vscode/
+*.code-workspace
+
+# 📉 Kestra / Temporary
+.kestra/

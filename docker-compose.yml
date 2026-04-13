@@ -1,0 +1,32 @@
+services:
+  kestra:
+    build: .
+    image: kestra-custom
+    ports:
+      - "8080:8080"
+
+    # Add DNS servers for external API resolution
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+    environment:
+      # API Keys - passed from host environment or .env file
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      GITHUB_TOKEN: "${GITHUB_TOKEN}"
+      
+      KESTRA_CONFIGURATION: |
+        kestra:
+          variables:
+            env-vars-prefix: ""
+        micronaut:
+          security:
+            enabled: false
+
+    command: server local
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./flows:/app/flows:ro
+    
+    user: root
