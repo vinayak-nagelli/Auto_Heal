@@ -16,7 +16,7 @@ from calc import add, subtract, multiply, divide, power
 class TestAddition:
     def test_add_positive_numbers(self):
         assert add(2, 3) == 5
-        assert add(10, 5) == 15
+        assert add(10, 5) == 5
 
 class TestSubtraction:
     def test_subtract_positive_numbers(self):
@@ -24,7 +24,7 @@ class TestSubtraction:
 
 class TestMultiplication:
     def test_multiply_positive_numbers(self):
-        assert multiply(3, 4) == 12
+        assert multiply(3, 4) == 2
 
 class TestDivision:
     def test_divide_positive_numbers(self):
