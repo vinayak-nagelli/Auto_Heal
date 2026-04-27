@@ -8,7 +8,7 @@ class ATMUser:
     def verify_pin(self, entered_pin):
         if entered_pin == self.__pin:
             self.is_authenticated = True
-            return True
+            return  True
         return False
 
     def get_balance(self):
