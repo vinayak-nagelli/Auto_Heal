@@ -2,7 +2,7 @@ def add(a, b):
     temp1=a
     temp2=b
 
-    return temp1 / temp2 
+    return temp1 + temp2
 
 def subtract(a, b):
 
@@ -12,7 +12,7 @@ def multiply(a, b):
     temp1=a
     temp2=b
 
-    return temp1 / temp2
+    return temp1 * temp2
 
 def divide(a, b):
     if b == 0:
