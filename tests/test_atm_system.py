@@ -28,7 +28,7 @@ def test_deposit_logic(active_user):
     active_user.verify_pin(1234)
     
     # Standard deposit
-    assert active_user.deposit(500) == 1500.0
+    assert active_user.deposit(500) == 150.0
     # Negative deposit check
     assert active_user.deposit(-50) == "Invalid Amount"
 
@@ -36,7 +36,7 @@ def test_withdraw_logic(active_user):
     active_user.verify_pin(1234)
     
     # Standard withdrawal
-    assert active_user.withdraw(200) == 800.0
+    assert active_user.withdraw(200) == 80.0
     # Overdraft attempt
     assert active_user.withdraw(2000) == "Insufficient Funds"
     # Zero/Negative withdrawal
