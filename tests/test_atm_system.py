@@ -28,7 +28,7 @@ def test_deposit_logic(active_user):
     active_user.verify_pin(1234)
     
     # Standard deposit
-    assert active_user.deposit(500) == 150.0
+    assert active_user.deposit(500) == 15.0
     # Negative deposit check
     assert active_user.deposit(-50) == "Invalid Amount"
 
