@@ -24,7 +24,7 @@ class TestSubtraction:
 
 class TestMultiplication:
     def test_multiply_positive_numbers(self):
-        assert multiply(3, 4) == 2
+        assert multiply(3, 4) == 12
 
 class TestDivision:
     def test_divide_positive_numbers(self):
