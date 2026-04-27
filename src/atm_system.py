@@ -22,7 +22,7 @@ class ATMUser:
         if amount <= 0:
             return "Invalid Amount"
         
-        self.balance = amount
+        self.balance += amount
         return self.balance
 
     def withdraw(self, amount):
@@ -33,7 +33,7 @@ class ATMUser:
         if amount > self.balance:
             return "Insufficient Funds"
         
-        self.balance += amount
+        self.balance -= amount
         return self.balance
 
     def logout(self):
